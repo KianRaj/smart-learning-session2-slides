@@ -23,12 +23,11 @@ teaching deck, not a fill-in-the-blanks exercise.
 
 | Part | Slides | Content |
 |------|--------|---------|
-| Motivation | 1–3 | Why AI study tools; objectives for the session |
-| The tools | 4–6 | Gemini vs NotebookLM; Gemini features + steal-these prompts |
-| NotebookLM | 7–12 | Creating a notebook, Studio tools, cited answers — with real in-app screenshots |
-| Prompting | 13 | Anatomy of a good prompt (role + task + source + format) |
-| Hands-on | 14–18 | The *Smart Study Companion* activity — Task 1, Task 2 with real screens showing where each output comes from, a sample 7-day plan |
-| Submit | 19–21 | The 11-item PDF checklist, best practices, wrap-up |
+| Motivation & objectives | 1–2 | Where study time goes (visualized); session outcomes |
+| The tools | 3–4 | Gemini vs NotebookLM compared; steal-these prompts + prompt anatomy |
+| NotebookLM | 5–8 | How grounding works; create a notebook, Studio tools, cited answers — real in-app screens |
+| Hands-on | 9–12 | Task 1 + Task 2 (all 10 outputs); drawn examples of good outputs + 7-day plan; where each output comes from in the tool |
+| Submit & wrap | 13–14 | The 11-item PDF checklist; recap |
 
 Every concept slide carries a **visualization** (inline SVG diagrams) so students can
 *see* the workflow — sources → NotebookLM → study assets → one PDF — while they do it.
@@ -37,7 +36,7 @@ Every concept slide carries a **visualization** (inline SVG diagrams) so student
 
 - **Navigate:** `→` / `Space` next · `←` back · `Home` / `End` jump · `F` fullscreen.
 - **Click:** right edge of the slide = next, left edge = back. Touch = swipe.
-- **Deep-link:** `index.html#14` opens slide 14 directly.
+- **Deep-link:** `index.html#9` opens the activity directly.
 
 ## The hands-on activity (what students submit)
 

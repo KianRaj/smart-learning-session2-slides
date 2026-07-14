@@ -208,6 +208,70 @@ def viz_prompt_anatomy():
     svg = f'<svg viewBox="0 0 {int(x)} 130">{s}</svg>'
     return viz(svg, "A good prompt = role + task + source + format. Name all four and the output gets sharper.")
 
+def viz_samples():
+    """Drawn examples of the three trickiest outputs: flashcard, MCQ, mind map."""
+    s = ""
+    # flashcard (front + back)
+    s += f'<rect x="20" y="30" width="200" height="120" rx="10" fill="#fff" stroke="{PEN}" stroke-width="1.6" transform="rotate(-2 120 90)"/>'
+    s += f'<text x="120" y="62" text-anchor="middle" font-size="11" fill="{PEN}" class="mono" transform="rotate(-2 120 90)">FLASHCARD · FRONT</text>'
+    s += f'<text x="120" y="95" text-anchor="middle" font-size="13" fill="{INK}" font-weight="600" transform="rotate(-2 120 90)">What does ACID</text>'
+    s += f'<text x="120" y="112" text-anchor="middle" font-size="13" fill="{INK}" font-weight="600" transform="rotate(-2 120 90)">stand for?</text>'
+    s += f'<rect x="60" y="120" width="200" height="90" rx="10" fill="{YEL}" stroke="#EAD98A" transform="rotate(2 160 165)"/>'
+    s += f'<text x="160" y="150" text-anchor="middle" font-size="11" fill="{INK}" class="mono" transform="rotate(2 160 165)">BACK</text>'
+    s += f'<text x="160" y="172" text-anchor="middle" font-size="12" fill="{INK}" transform="rotate(2 160 165)">Atomicity · Consistency</text>'
+    s += f'<text x="160" y="188" text-anchor="middle" font-size="12" fill="{INK}" transform="rotate(2 160 165)">Isolation · Durability</text>'
+    # MCQ card
+    s += f'<rect x="300" y="30" width="220" height="180" rx="10" fill="#fff" stroke="{LINE}"/>'
+    s += f'<text x="316" y="56" font-size="11" fill="{RED}" class="mono">MCQ · Q3</text>'
+    s += f'<text x="316" y="78" font-size="12.5" fill="{INK}" font-weight="600">Which normal form removes</text>'
+    s += f'<text x="316" y="94" font-size="12.5" fill="{INK}" font-weight="600">partial dependency?</text>'
+    opts = [("A) 1NF", False), ("B) 2NF", True), ("C) 3NF", False), ("D) BCNF", False)]
+    yy = 116
+    for t, right in opts:
+        if right:
+            s += f'<rect x="310" y="{yy-13}" width="90" height="19" rx="9" fill="rgba(46,158,91,.18)"/>'
+        s += f'<text x="318" y="{yy}" font-size="12" fill="{GRN if right else INK}" font-weight="{700 if right else 400}">{t}{" ✓" if right else ""}</text>'
+        yy += 23
+    # mind map
+    cx, cy = 660, 110
+    import math
+    for i, b in enumerate(["unit 1", "terms", "uses", "limits", "people"]):
+        ang = -90 + i*72
+        bx = cx + 95*math.cos(math.radians(ang)); by = cy + 78*math.sin(math.radians(ang))
+        s += f'<line x1="{cx}" y1="{cy}" x2="{bx}" y2="{by}" stroke="{LINE}" stroke-width="2"/>'
+        s += f'<rect x="{bx-32}" y="{by-13}" width="64" height="26" rx="13" fill="#fff" stroke="{RED}"/>'
+        s += f'<text x="{bx}" y="{by+4}" text-anchor="middle" font-size="10.5" fill="{INK}" class="mono">{b}</text>'
+    s += f'<circle cx="{cx}" cy="{cy}" r="34" fill="{RED}"/>'
+    s += f'<text x="{cx}" y="{cy+4}" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">TOPIC</text>'
+    s += f'<text x="120" y="232" text-anchor="middle" font-size="11.5" fill="{MUT}" class="mono">flashcards (output 5)</text>'
+    s += f'<text x="410" y="232" text-anchor="middle" font-size="11.5" fill="{MUT}" class="mono">MCQs (output 4)</text>'
+    s += f'<text x="{cx}" y="232" text-anchor="middle" font-size="11.5" fill="{MUT}" class="mono">mind map (output 9)</text>'
+    svg = f'<svg viewBox="0 0 790 240">{s}</svg>'
+    return viz(svg)
+
+def viz_week():
+    """The 7-day study plan as a calendar strip."""
+    days = [("D1", "read summary +\\nkey concepts", PEN),
+            ("D2", "deep-dive\\nhard terms", PEN),
+            ("D3", "deep-dive\\ncore sections", PEN),
+            ("D4", "active recall:\\nflashcards", RED),
+            ("D5", "practice: MCQs\\n+ viva aloud", RED),
+            ("D6", "rewrite notes\\nfrom memory", GRN),
+            ("D7", "audio overview\\n+ gap check", GRN)]
+    s = ""; x = 14; w = 104
+    for d, txt, col in days:
+        s += f'<rect x="{x}" y="34" width="{w-8}" height="120" rx="10" fill="#fff" stroke="{LINE}"/>'
+        s += f'<rect x="{x}" y="34" width="{w-8}" height="30" rx="10" fill="{col}"/>'
+        s += f'<rect x="{x}" y="52" width="{w-8}" height="12" fill="{col}"/>'
+        s += f'<text x="{x+(w-8)/2}" y="55" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">{d}</text>'
+        l1, l2 = txt.split("\\n")
+        s += f'<text x="{x+(w-8)/2}" y="95" text-anchor="middle" font-size="10.5" fill="{INK}">{l1}</text>'
+        s += f'<text x="{x+(w-8)/2}" y="110" text-anchor="middle" font-size="10.5" fill="{INK}">{l2}</text>'
+        x += w
+    svg = f'<svg viewBox="0 0 {x+10} 168">{s}</svg>'
+    return viz(svg, "Days 1–3 understand · days 4–5 recall &amp; practice · days 6–7 consolidate. Ask NotebookLM to build your plan like this.",
+               [(PEN, "understand"), (RED, "recall &amp; practice"), (GRN, "consolidate")])
+
 def viz_taskflow():
     s = _defs()
     s += _chip(20, 70, 170, "1 document", "#fff", INK, h=50, r=10)
@@ -236,88 +300,57 @@ SLIDES = [
     tags(["Tools: Gemini + NotebookLM", "Mode: hands-on lab", "Deliverable: one PDF"], on=["Mode: hands-on lab"]),
     muted("Press → / Space to advance · ← to go back · F for fullscreen"),
   ),
-  # 2 — motivation
+  # 2 — why + objectives (merged)
   slide(
-    eyebrow("Motivation"),
-    h2("Where does your study time actually go?"),
+    eyebrow("Why &amp; what · visualize it"),
+    h2("Where your study time goes"),
     viz_timesplit(),
-    cards([
-      ("the pain", "Searching", "Hunting for material across PDFs, slides and websites."),
-      ("the pain", "Organizing", "Re-writing content into notebooks and summaries."),
-      ("the pain", "Revising", "Re-reading whole chapters with no condensed structure."),
-    ], cols=3),
+    two(
+      p("Searching, organizing, revising — that's where your hours go. "
+        "AI does the slow parts fast. <b>Understanding is still your job.</b>"),
+      tick([
+        "Use <b>Gemini</b> for research, brainstorming, code &amp; images.",
+        "Build a <b>NotebookLM</b> notebook from your own documents.",
+        "Generate summaries, MCQs, flashcards &amp; a study plan — <b>cited</b>.",
+        "Compile everything into one <b>submission-ready PDF</b>.",
+      ]),
+    ),
   ),
-  # 3 — objectives
-  slide(
-    eyebrow("Objective"),
-    h2("By the end of this session you can…"),
-    tick([
-      "Use <b>Gemini</b> for research, brainstorming, coding help and image understanding.",
-      "Create a <b>NotebookLM</b> notebook from your own academic documents.",
-      "Generate summaries, study guides, FAQs, audio overviews and revision notes.",
-      "Ask questions that are <b>grounded in your uploaded sources</b> (with citations).",
-      "Produce MCQs, viva questions, flashcards and a 7-day study plan.",
-      "Compile everything into a <b>submission-ready PDF</b>.",
-    ]),
-  ),
-  # 4 — toolkit / compare
+  # 3 — toolkit compare
   slide(
     eyebrow("The toolkit · visualize it"),
     h2("Two tools, two different jobs"),
     viz_compare(),
     muted("Gemini opens the whole world to you. NotebookLM locks onto YOUR documents so answers stay exam-safe."),
   ),
-  # 5 — gemini features
-  slide(
-    eyebrow("Gemini · visualize it"),
-    h2("Four Gemini features every student should use"),
-    viz_gemini(),
-    cards([
-      ("1", "File upload", "Chat with a PDF, DOCX or slide deck."),
-      ("2", "Coding help", "Write, fix and explain code line-by-line."),
-      ("3", "Brainstorming", "Project ideas, seminar titles, outlines."),
-      ("4", "Image understanding", "Read a diagram, hand-written note or photo."),
-    ], cols=4),
-  ),
-  # 6 — gemini prompts
+  # 4 — gemini prompts + anatomy
   slide(
     eyebrow("Gemini"),
     h2("Prompts you can steal today"),
     two(
       prompt("Suggest 10 mini-project ideas for a 2nd-year CSE student on machine "
-             "learning. For each, list the dataset and difficulty level.", "brainstorm") +
-      prompt("This Python code throws 'IndexError: list index out of range'. Explain "
-             "why in simple terms, then show the fixed code. [paste code]", "coding help"),
+             "learning. For each, list the dataset and difficulty level.", "brainstorm"),
       prompt("[attach chapter PDF] Explain the three hardest ideas in this chapter "
-             "using everyday examples an 18-year-old would relate to.", "file upload") +
-      prompt("[attach photo of a diagram] Identify this diagram, label each part, and "
-             "explain the flow in 5 bullet points.", "image"),
+             "using everyday examples an 18-year-old would relate to.", "file upload"),
     ),
-    flash("<b>Good prompts have three parts:</b> role or context + a specific task + the output format."),
+    viz_prompt_anatomy(),
+    tags(["file upload", "coding help", "brainstorming", "image understanding"]),
   ),
-  # 7 — notebooklm intro
-  slide(
-    eyebrow("NotebookLM"),
-    h2("Your personal, source-grounded research assistant"),
-    two(
-      tick([
-        "Accepts PDFs, Google Docs &amp; Slides, websites, YouTube links, pasted text.",
-        "Every answer includes <b>clickable citations</b> back to your documents.",
-        "Won't invent facts from outside your sources.",
-      ]),
-      flash("Grounded answers are <b>safer for exam prep</b> — when the syllabus defines "
-            "what's correct, you want answers that stay inside it.<br><br>"
-            "Free with a Google account · works in the browser on laptop and phone."),
-    ),
-  ),
-  # 8 — notebooklm workflow
+  # 5 — notebooklm intro + workflow (merged)
   slide(
     eyebrow("NotebookLM · visualize it"),
-    h2("How NotebookLM works"),
+    h2("Answers from YOUR documents only"),
     viz_notebooklm(),
-    muted("You bring the sources; NotebookLM does the reading and turns them into study material you can trust."),
+    two(
+      tick([
+        "Give it PDFs, Docs, Slides, websites, YouTube links or pasted text.",
+        "Every answer shows <b>where it came from</b> — click the citation to see the exact page.",
+      ]),
+      flash("<b>Safer for exams:</b> answers come only from what you uploaded — nothing made up. "
+            "Free with your Google account, works in the browser."),
+    ),
   ),
-  # 9 — create first notebook (real UI)
+  # 6 — create notebook (real UI)
   slide(
     eyebrow("NotebookLM · inside the tool"),
     h2("Create your first notebook"),
@@ -335,40 +368,30 @@ SLIDES = [
             "one notebook = one topic → sharper, better-cited answers."),
     ),
   ),
-  # 10 — working with documents
-  slide(
-    eyebrow("NotebookLM"),
-    h2("PDFs, PPTs &amp; research papers"),
-    cards([
-      ("textbook PDFs", "Upload directly", "Ask for unit breakdowns and worked examples on tough sections."),
-      ("slides / PPT", "Via Google Slides or export to PDF", "Reconstruct the full lecture from the deck."),
-      ("research paper", "Ask the 3 questions", "“What problem does it solve? What method? What results?”"),
-    ], cols=3),
-    flash("Mix source types in one notebook and ask a question <b>across all of them at once</b>."),
-  ),
-  # 11 — studio tools (real UI)
+  # 7 — studio tools + document types (merged, real UI)
   slide(
     eyebrow("NotebookLM · inside the tool"),
     h2("One click, four study assets"),
     two(
       shot("nblm_studio.jpg", "notebooklm.google.com → Studio panel",
-           "The real Studio buttons — Study guide, Briefing doc, FAQ, Timeline. One click each."),
+           "The real Studio buttons — Study guide, Briefing doc, FAQ, Timeline."),
       tick([
         "<b>Study guide</b> — key topics, terms &amp; short-answer questions.",
         "<b>FAQ</b> — likely questions, answered with citations.",
         "<b>Audio overview</b> — podcast-style revision on the go.",
-        "<b>Briefing / notes</b> — condensed summaries, timelines, mind maps.",
+        "<b>Briefing / notes</b> — summaries, timelines, mind maps.",
       ]),
     ),
-    muted("Ask in chat for more: flashcards, a 7-day study plan, viva questions with model answers."),
+    muted("Works on textbook PDFs, exported PPTs and research papers — mix them in one notebook "
+          "and ask across all of them. Chat gives you more: flashcards, study plans, viva questions."),
   ),
-  # 12 — question answering (grounding, real UI)
+  # 8 — cited answers (real UI)
   slide(
     eyebrow("NotebookLM · inside the tool"),
     h2("Ask your documents, get cited answers"),
     two(
       shot("nblm_citations.jpg", "notebooklm.google.com → chat",
-           "A real grounded answer — the highlighted phrase links straight back to the source passage."),
+           "A real grounded answer — the highlight links straight back to the source passage."),
       prompt("Define 'normalization' exactly as this document explains it, then give "
              "the example it uses.", "definition") +
       prompt("List anything in the syllabus PDF that is NOT covered in my class-notes "
@@ -377,46 +400,22 @@ SLIDES = [
     flash("<b>Always click the citation</b> to check the passage before you memorise it. "
           "NotebookLM also tells you when it <i>cannot</i> find something — that's a real gap."),
   ),
-  # 13 — prompt anatomy
-  slide(
-    eyebrow("Skill · visualize it"),
-    h2("Anatomy of a good prompt"),
-    viz_prompt_anatomy(),
-    p("Whether it's Gemini or NotebookLM, the same recipe works. For NotebookLM add "
-      "<b>“from my sources only”</b> so the answer stays grounded."),
-  ),
-  # 14 — activity overview
-  slide(
-    eyebrow("Hands-on"),
-    h2("Activity — your Smart Study Companion"),
-    viz_taskflow(),
-    cards([
-      ("~10 min", "Task 1 · Create", "Upload one document and build a notebook."),
-      ("~45 min", "Task 2 · Explore", "Generate all 10 study outputs from it."),
-      ("~15 min", "Compile", "Paste everything into one PDF and submit."),
-    ], cols=3),
-  ),
-  # 15 — task 1
+  # 9 — activity + task 1 (merged)
   slide(
     eyebrow("Hands-on · Task 1"),
-    h2("Create your notebook  (~10 min)"),
+    h2("Activity — your Smart Study Companion"),
+    viz_taskflow(),
     two(
-      p("Pick <b>one</b> document (4–5+ pages of real content) and upload it:") +
-      tick([
-        "Your branch <b>syllabus</b>",
-        "An <b>AI-related article</b>",
-        "A <b>research paper</b>",
-        "A <b>college brochure</b>",
-        "Your <b>class notes</b> or lecture slides",
-      ]),
+      p("<b>Task 1 (~10 min):</b> pick ONE document (4–5+ pages) and upload it:") +
+      tags(["branch syllabus", "AI article", "research paper", "college brochure", "class notes / slides"]),
       flash("📸 <b>Screenshot the uploaded source</b> inside NotebookLM right away — "
-            "that screenshot is the first item in your submission."),
+            "it's the first item in your submission. Then Task 2: ~45 min · Compile: ~15 min."),
     ),
   ),
-  # 16 — task 2 part 1
+  # 10 — task 2: the ten outputs
   slide(
     eyebrow("Hands-on · Task 2"),
-    h2("Explore the document — generate these"),
+    h2("Explore the document — generate these ten"),
     two(
       steps([
         "A <b>100–150 word summary</b> of the document.",
@@ -435,7 +434,14 @@ SLIDES = [
     ),
     flash("<b>Prompt pattern:</b> “From my sources only, …” + the task + a word / format limit."),
   ),
-  # 16b — the outputs, live in the tool
+  # 11 — what good outputs look like (drawn)
+  slide(
+    eyebrow("Hands-on · visualize the outputs"),
+    h2("What “good” looks like"),
+    viz_samples(),
+    viz_week(),
+  ),
+  # 12 — where each output comes from (real UI)
   slide(
     eyebrow("Hands-on · Task 2 in the tool"),
     h2("Where each output comes from"),
@@ -449,21 +455,7 @@ SLIDES = [
     + '</div>',
     muted("Real NotebookLM screens — Studio for one-click assets, chat for everything custom, audio for revision on the go."),
   ),
-  # 17 — sample 7-day plan
-  slide(
-    eyebrow("Hands-on · what 'good' looks like"),
-    h2("A 7-day plan, done well"),
-    rows([
-      ("Day 1", "Read the summary + key concepts — skim the source with citations open."),
-      ("Day 2–3", "Deep-dive the difficult terms &amp; core sections — ask “explain with an example”."),
-      ("Day 4", "Active recall — flashcards, self-test without notes."),
-      ("Day 5", "Practice — attempt the MCQs and viva questions aloud."),
-      ("Day 6", "Consolidate — rewrite the one-page notes from memory."),
-      ("Day 7", "Simulate — audio overview on the commute + a final gap check."),
-    ]),
-    muted("A good plan is document-specific and uses varied methods — not “read everything again”."),
-  ),
-  # 18 — submission checklist
+  # 13 — submission
   slide(
     eyebrow("Deliverable"),
     h2("One PDF, eleven items"),
@@ -487,21 +479,12 @@ SLIDES = [
     flash("Paste into a Google Doc / Word in this order with headings, export as one PDF. "
           "Filename: <b>RollNo_Name_Session2.pdf</b>"),
   ),
-  # 19 — best practices
-  slide(
-    eyebrow("Best practice"),
-    h2("Use AI like a topper, not a shortcut"),
-    two(
-      cards([("do", "Verify &amp; rewrite", "Check answers against cited passages; rewrite key outputs in your own words; use flashcards for active recall; ask follow-ups until you can explain it to a friend.")], cols=1),
-      cards([("don't", "Don't outsource thinking", "Don't submit text you haven't read; don't trust numbers / formulas without checking the source; don't upload confidential or copyrighted material; don't let tools replace practice problems.")], cols=1),
-    ),
-    flash("<b>Tools compress reading time — understanding still happens in your head.</b>"),
-  ),
-  # 20 — wrap up
+  # 14 — wrap
   slide(
     handoff("Every document you own is now a study companion.",
             "Recap — Gemini for open-world help · NotebookLM for grounded mastery · "
-            "one PDF with all 11 items.",
+            "one PDF with all 11 items. Verify citations, rewrite in your own words, "
+            "never submit what you haven't read.",
             "notebooklm.google.com  ·  gemini.google.com"),
     muted("Submission deadline as announced in class — ask your doubts now or during the lab."),
     cls="handoff-slide",

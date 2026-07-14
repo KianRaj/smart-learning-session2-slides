@@ -181,6 +181,21 @@ pre.code .kw{ color:#FFD479 }        /* keyword-ish */
   letter-spacing:.1em; text-transform:uppercase; color:var(--hl); margin-bottom:6px; }
 .prompt-box .pt{ font-family:"IBM Plex Mono",monospace; font-size:14px; line-height:1.5; }
 
+/* ---- real-website screenshots ---- */
+.shot{ background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:10px 10px 8px; margin:6px 0; box-shadow:0 1px 0 rgba(23,35,59,.04); }
+.shot .bar{ display:flex; align-items:center; gap:6px; padding:2px 4px 8px; }
+.shot .bar i{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+.shot .bar .url{ margin-left:10px; font-family:"IBM Plex Mono",monospace; font-size:12px;
+  color:var(--muted); background:var(--paper); border:1px solid var(--line);
+  border-radius:999px; padding:3px 14px; }
+.shot .imgwrap{ border-radius:8px; overflow:hidden; border:1px solid var(--line); }
+.shot .imgwrap img{ display:block; width:100%; height:auto; }
+.shot .imgwrap.crop{ aspect-ratio:16/7; }
+.shot .imgwrap.crop img{ height:100%; width:100%; object-fit:cover; object-position:top; }
+.shot .cap{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted);
+  margin-top:8px; letter-spacing:.02em; }
+
 /* ---- visualizations (inline SVG) ---- */
 .viz{ background:var(--card); border:1px solid var(--line); border-radius:12px;
   padding:16px 18px; margin:6px 0; box-shadow:0 1px 0 rgba(23,35,59,.04); }

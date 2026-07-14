@@ -24,10 +24,10 @@ teaching deck, not a fill-in-the-blanks exercise.
 |------|--------|---------|
 | Motivation | 1–3 | Why AI study tools; objectives for the session |
 | The tools | 4–6 | Gemini vs NotebookLM; Gemini features + steal-these prompts |
-| NotebookLM | 7–12 | Source-grounded Q&A, creating a notebook, Studio tools, citations |
+| NotebookLM | 7–12 | Creating a notebook, Studio tools, cited answers — with real in-app screenshots |
 | Prompting | 13 | Anatomy of a good prompt (role + task + source + format) |
-| Hands-on | 14–17 | The *Smart Study Companion* activity — Task 1, Task 2, a sample 7-day plan |
-| Submit | 18–20 | The 11-item PDF checklist, best practices, wrap-up |
+| Hands-on | 14–18 | The *Smart Study Companion* activity — Task 1, Task 2 with real screens showing where each output comes from, a sample 7-day plan |
+| Submit | 19–21 | The 11-item PDF checklist, best practices, wrap-up |
 
 Every concept slide carries a **visualization** (inline SVG diagrams) so students can
 *see* the workflow — sources → NotebookLM → study assets → one PDF — while they do it.

@@ -69,6 +69,14 @@ def handoff(title, note, chip):
             f'<div class="big">{title}</div><p class="muted">{note}</p>'
             f'<span class="file">{chip}</span></div>')
 
+def shot(src, url, cap="", crop=False):
+    """A real-website screenshot in a browser frame (image self-hosted in assets/img)."""
+    dots = "".join(f'<i style="background:{c}"></i>' for c in ("#E4572E", "#FFC93C", "#2E9E5B"))
+    cap = f'<div class="cap">{cap}</div>' if cap else ""
+    cls = "imgwrap crop" if crop else "imgwrap"
+    return (f'<div class="shot"><div class="bar">{dots}<span class="url">{url}</span></div>'
+            f'<div class="{cls}"><img src="assets/img/{src}" alt="{url} screenshot"></div>{cap}</div>')
+
 # ---------- visualization helpers (inline SVG) ----------
 def viz(svg, cap="", legend=None):
     leg = ""
@@ -309,9 +317,9 @@ SLIDES = [
     viz_notebooklm(),
     muted("You bring the sources; NotebookLM does the reading and turns them into study material you can trust."),
   ),
-  # 9 — create first notebook
+  # 9 — create first notebook (real UI)
   slide(
-    eyebrow("NotebookLM"),
+    eyebrow("NotebookLM · inside the tool"),
     h2("Create your first notebook"),
     two(
       steps([
@@ -321,9 +329,10 @@ SLIDES = [
         "Wait for NotebookLM to <b>index</b> your sources.",
         "Start chatting, or use one-click tools in the <b>Studio</b> panel.",
       ]),
-      flash("<b>Tips</b><br>• Name it by subject + unit — e.g. "
-            "<i>DBMS – Unit 3 Normalization</i>.<br>• One notebook = one topic → "
-            "sharper, better-cited answers."),
+      shot("nblm_upload.jpg", "notebooklm.google.com → your notebook",
+           "The real thing — sources added, and you just ask: “Can you summarize…”") +
+      flash("<b>Tips</b> · name it subject + unit (e.g. <i>DBMS – Unit 3</i>) · "
+            "one notebook = one topic → sharper, better-cited answers."),
     ),
   ),
   # 10 — working with documents
@@ -337,31 +346,36 @@ SLIDES = [
     ], cols=3),
     flash("Mix source types in one notebook and ask a question <b>across all of them at once</b>."),
   ),
-  # 11 — studio tools
+  # 11 — studio tools (real UI)
   slide(
-    eyebrow("NotebookLM"),
+    eyebrow("NotebookLM · inside the tool"),
     h2("One click, four study assets"),
-    cards([
-      ("Studio", "Study guide", "Auto-outline: key topics, terms and short-answer questions."),
-      ("Studio", "FAQ", "The questions a reader is most likely to ask — answered with citations."),
-      ("Studio", "Audio overview", "A podcast-style discussion to revise while commuting."),
-      ("Studio", "Briefing / notes", "Condensed summaries, timelines and mind maps."),
-    ], cols=4),
+    two(
+      shot("nblm_studio.jpg", "notebooklm.google.com → Studio panel",
+           "The real Studio buttons — Study guide, Briefing doc, FAQ, Timeline. One click each."),
+      tick([
+        "<b>Study guide</b> — key topics, terms &amp; short-answer questions.",
+        "<b>FAQ</b> — likely questions, answered with citations.",
+        "<b>Audio overview</b> — podcast-style revision on the go.",
+        "<b>Briefing / notes</b> — condensed summaries, timelines, mind maps.",
+      ]),
+    ),
     muted("Ask in chat for more: flashcards, a 7-day study plan, viva questions with model answers."),
   ),
-  # 12 — question answering (grounding)
+  # 12 — question answering (grounding, real UI)
   slide(
-    eyebrow("NotebookLM · visualize it"),
+    eyebrow("NotebookLM · inside the tool"),
     h2("Ask your documents, get cited answers"),
-    viz_grounding(),
     two(
+      shot("nblm_citations.jpg", "notebooklm.google.com → chat",
+           "A real grounded answer — the highlighted phrase links straight back to the source passage."),
       prompt("Define 'normalization' exactly as this document explains it, then give "
              "the example it uses.", "definition") +
       prompt("List anything in the syllabus PDF that is NOT covered in my class-notes "
              "PDF.", "gap finder"),
-      flash("<b>Always click the citation</b> to check the passage before you memorise it. "
-            "NotebookLM will also tell you when it <i>cannot</i> find something — that's a real gap."),
     ),
+    flash("<b>Always click the citation</b> to check the passage before you memorise it. "
+          "NotebookLM also tells you when it <i>cannot</i> find something — that's a real gap."),
   ),
   # 13 — prompt anatomy
   slide(
@@ -420,6 +434,20 @@ SLIDES = [
       ]),
     ),
     flash("<b>Prompt pattern:</b> “From my sources only, …” + the task + a word / format limit."),
+  ),
+  # 16b — the outputs, live in the tool
+  slide(
+    eyebrow("Hands-on · Task 2 in the tool"),
+    h2("Where each output comes from"),
+    '<div class="cards c3">'
+    + shot("nblm_studio.jpg", "Studio panel",
+           "Outputs 1, 6, 8 — summary, revision notes &amp; learning outcomes start from Study guide / Briefing doc.")
+    + shot("nblm_citations.jpg", "chat with citations",
+           "Outputs 2–5, 7 — concepts, simplified terms, MCQs, flashcards &amp; viva questions: ask in chat, verify the citations.")
+    + shot("nblm_audio.jpg", "Audio overview",
+           "Outputs 9–10 — generate the mind map in Studio; use the Audio overview while following your 7-day plan.")
+    + '</div>',
+    muted("Real NotebookLM screens — Studio for one-click assets, chat for everything custom, audio for revision on the go."),
   ),
   # 17 — sample 7-day plan
   slide(

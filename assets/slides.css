@@ -1,0 +1,203 @@
+/* ============================================================
+   KIET Deep Learning — Lecture Slides
+   "Notebook aesthetic" slide engine (shared stylesheet)
+   ============================================================ */
+
+:root{
+  --paper:#F7F6F1;      /* warm off-white page      */
+  --ink:#17233B;        /* dark-blue text           */
+  --pen:#2B4FD8;        /* accent blue (links)      */
+  --margin:#E4572E;     /* red notebook margin line */
+  --hl:#FFE066;         /* highlighter yellow       */
+  --muted:#6E7688;      /* secondary grey           */
+  --card:#FFFFFF;
+  --line:#E7E4DB;
+  --code-bg:#17233B;
+  --code-fg:#EDF0F7;
+  --maxw:1120px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+
+/* ---- fixed notebook margin line ---- */
+.margin-line{
+  position:fixed; top:0; bottom:0; left:64px;
+  width:2px; background:var(--margin); opacity:.55; z-index:5;
+}
+@media(max-width:900px){ .margin-line{ left:26px } }
+
+/* ---- slide stage ---- */
+.stage{ position:relative; height:100vh; width:100%; }
+.slide{
+  position:absolute; inset:0;
+  display:none;
+  padding:64px 72px 88px 120px;
+  overflow:auto;
+}
+.slide.active{ display:flex; flex-direction:column; justify-content:center; }
+.slide.turn{ animation:turn .35s ease both; }
+@keyframes turn{ from{opacity:0; transform:translateX(24px)} to{opacity:1; transform:none} }
+@media(prefers-reduced-motion:reduce){ .slide.turn{ animation:none } }
+@media(max-width:900px){ .slide{ padding:44px 26px 84px 44px } }
+
+.inner{ width:100%; max-width:var(--maxw); margin:0 auto; }
+
+/* ---- slide number in the margin ---- */
+.slide-no{
+  position:absolute; left:0; top:60px; width:120px;
+  text-align:right; padding-right:26px;
+  font-family:"IBM Plex Mono",monospace; font-size:13px;
+  color:var(--margin); letter-spacing:.05em;
+}
+@media(max-width:900px){ .slide-no{ display:none } }
+
+/* ---- typography ---- */
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace; font-size:13px; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--pen);
+  margin:0 0 14px;
+}
+.eyebrow .dot{ color:var(--margin) }
+h1{
+  font-family:"Archivo",sans-serif; font-weight:900; line-height:1.02;
+  letter-spacing:-.015em; margin:0 0 18px;
+  font-size:clamp(38px,6vw,78px);
+}
+h2{
+  font-family:"Archivo",sans-serif; font-weight:800; line-height:1.06;
+  letter-spacing:-.01em; margin:0 0 20px;
+  font-size:clamp(28px,3.6vw,46px);
+}
+h3{ font-family:"Archivo",sans-serif; font-weight:700; font-size:19px; margin:0 0 8px; }
+p{ font-size:18px; line-height:1.55; margin:0 0 14px; max-width:60ch; }
+.lead{ font-size:clamp(19px,2.1vw,25px); line-height:1.5; color:var(--ink); max-width:56ch; }
+.muted{ color:var(--muted) }
+b,strong{ font-weight:700 }
+a{ color:var(--pen); text-decoration:none; border-bottom:1.5px solid rgba(43,79,216,.35) }
+mark{ background:linear-gradient(transparent 55%, var(--hl) 55%); color:inherit; padding:0 2px; }
+code{ font-family:"IBM Plex Mono",monospace; font-size:.92em;
+  background:rgba(23,35,59,.07); padding:1px 6px; border-radius:5px; }
+
+/* ---- cards ---- */
+.cards{ display:grid; gap:16px; margin:8px 0; }
+.cards.c2{ grid-template-columns:repeat(2,1fr) }
+.cards.c3{ grid-template-columns:repeat(3,1fr) }
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:20px 22px; box-shadow:0 1px 0 rgba(23,35,59,.04);
+}
+.card h3{ margin-bottom:6px }
+.card p{ font-size:15.5px; margin:0; color:var(--muted) }
+.card .k{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--pen);
+  letter-spacing:.08em; text-transform:uppercase; display:block; margin-bottom:8px; }
+
+/* ---- tick / step lists ---- */
+ul.tick{ list-style:none; padding:0; margin:8px 0; display:grid; gap:10px; }
+ul.tick li{ position:relative; padding:12px 16px 12px 44px; font-size:17px;
+  border:1px dashed var(--line); border-radius:10px; background:rgba(255,255,255,.5); }
+ul.tick li::before{ content:"✓"; position:absolute; left:16px; top:12px;
+  color:var(--pen); font-weight:700; }
+
+ol.steps{ list-style:none; counter-reset:s; padding:0; margin:8px 0; display:grid; gap:12px; }
+ol.steps li{ position:relative; padding:14px 18px 14px 62px; font-size:17px;
+  border:1px solid var(--line); border-radius:10px; background:var(--card); }
+ol.steps li::before{ counter-increment:s; content:counter(s,decimal-leading-zero);
+  position:absolute; left:14px; top:12px; width:34px; height:34px; border-radius:8px;
+  background:var(--ink); color:#fff; font-family:"IBM Plex Mono",monospace; font-size:13px;
+  display:flex; align-items:center; justify-content:center; }
+
+/* ---- code / prompt block ---- */
+pre.code{
+  font-family:"IBM Plex Mono",monospace; font-size:14.5px; line-height:1.55;
+  background:var(--code-bg); color:var(--code-fg);
+  border-radius:12px; padding:18px 20px; margin:8px 0; overflow-x:auto;
+  border:1px solid rgba(0,0,0,.2);
+}
+pre.code .cm{ color:#8FA6C8 }        /* comment */
+pre.code .kw{ color:#FFD479 }        /* keyword-ish */
+.arch{ font-family:"IBM Plex Mono",monospace; font-size:15px; color:var(--ink);
+  background:#EFEDE5; border:1px dashed var(--line); border-radius:10px;
+  padding:14px 18px; overflow-x:auto; white-space:pre; }
+
+/* ---- flash / sticky note ---- */
+.flash{ background:#FFF9DE; border:1px solid #EAD98A; border-radius:10px;
+  padding:14px 18px; transform:rotate(-.5deg); font-size:16.5px;
+  box-shadow:0 6px 16px rgba(0,0,0,.06); max-width:60ch; }
+.flash b{ color:#8A6D00 }
+
+/* ---- key-value / math rows ---- */
+.rows{ display:grid; gap:8px; margin:8px 0; font-family:"IBM Plex Mono",monospace; font-size:15px; }
+.rows .row{ display:flex; gap:12px; align-items:baseline; padding:8px 12px;
+  border-left:3px solid var(--pen); background:rgba(43,79,216,.05); border-radius:0 8px 8px 0; }
+.rows .row .lbl{ color:var(--pen); min-width:120px }
+
+/* ---- pill / tag ---- */
+.tags{ display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 }
+.tag{ font-family:"IBM Plex Mono",monospace; font-size:12.5px; letter-spacing:.04em;
+  border:1px solid var(--line); background:var(--card); border-radius:999px; padding:6px 12px; color:var(--muted); }
+.tag.on{ background:var(--ink); color:#fff; border-color:var(--ink) }
+
+/* ---- handoff banner ---- */
+.handoff{ border:2px solid var(--ink); border-radius:14px; padding:26px 28px; background:var(--card); }
+.handoff .big{ font-family:"Archivo",sans-serif; font-weight:900; font-size:clamp(26px,3.4vw,40px);
+  letter-spacing:-.01em; margin:6px 0 10px; }
+.handoff .file{ font-family:"IBM Plex Mono",monospace; font-size:15px; color:var(--pen);
+  background:rgba(43,79,216,.08); border-radius:8px; padding:8px 12px; display:inline-block; }
+
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:26px; align-items:start; }
+@media(max-width:900px){
+  .cards.c2,.cards.c3,.two{ grid-template-columns:1fr }
+}
+
+/* ---- fixed chrome ---- */
+.progress{ position:fixed; left:0; bottom:0; height:4px; background:var(--pen);
+  width:0; z-index:8; transition:width .3s ease; }
+.counter{ position:fixed; right:20px; bottom:16px; z-index:8;
+  font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--muted); }
+.counter b{ color:var(--ink) }
+.nav{ position:fixed; right:18px; top:50%; transform:translateY(-50%); z-index:8;
+  display:flex; flex-direction:column; gap:10px; }
+.nav button{ width:44px; height:44px; border-radius:50%; border:1px solid var(--line);
+  background:var(--card); color:var(--ink); font-size:18px; cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.06); transition:transform .12s ease; }
+.nav button:hover{ transform:scale(1.06); border-color:var(--pen); color:var(--pen) }
+.brand{ position:fixed; left:96px; bottom:14px; z-index:8;
+  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted); }
+@media(max-width:900px){ .brand{ left:44px } .nav{ right:10px } }
+
+/* ---- prompt boxes (copy-me example prompts) ---- */
+.prompt-box{ background:var(--code-bg); color:var(--code-fg); border-radius:10px;
+  padding:12px 14px; margin:0 0 12px; border:1px solid rgba(0,0,0,.2); }
+.prompt-box .pl{ display:block; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--hl); margin-bottom:6px; }
+.prompt-box .pt{ font-family:"IBM Plex Mono",monospace; font-size:14px; line-height:1.5; }
+
+/* ---- visualizations (inline SVG) ---- */
+.viz{ background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:16px 18px; margin:6px 0; box-shadow:0 1px 0 rgba(23,35,59,.04); }
+.viz svg{ display:block; width:100%; height:auto; }
+.viz .cap{ font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted);
+  margin-top:10px; letter-spacing:.02em; }
+.viz-legend{ display:flex; flex-wrap:wrap; gap:14px; margin-top:10px;
+  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted); }
+.viz-legend span{ display:inline-flex; align-items:center; gap:6px; }
+.viz-legend i{ width:12px; height:12px; border-radius:3px; display:inline-block; }
+/* svg text defaults */
+svg text{ font-family:"IBM Plex Sans",sans-serif; }
+svg .mono{ font-family:"IBM Plex Mono",monospace; }
+
+/* ---- home link (top-right corner) ---- */
+.home{ position:fixed; right:20px; top:18px; z-index:9;
+  font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--muted);
+  border:1px solid var(--line); background:var(--card); border-radius:999px;
+  padding:6px 14px; }
+.home:hover{ border-color:var(--pen); color:var(--pen) }
